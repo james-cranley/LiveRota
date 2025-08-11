@@ -93,6 +93,8 @@ Use cloudflare or similar to forward <port> as a subdomain of an existing domain
 ## How to Subscribe via Calendar client
 
 Once LiveRota is running and serving your `.ics` files, you can subscribe to them in your preferred calendar app.
+This means that changes in the rota will be reflected in the subscribed calendar feed.
+You do need to ensure the calendar client 'refreshes' autoamtically, updates will not be 'pushed' to the client. Daily is fine since the rota shouldn't change often.
 
 ### Apple Calendar (macOS / iOS)
 1. Open Calendar.
