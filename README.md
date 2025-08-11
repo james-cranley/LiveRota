@@ -3,8 +3,8 @@
 LiveRota watches a rota Excel file, regenerates `.ics` calendar files when it changes, and serves them over HTTP from a Raspberry Pi (or any Linux host).
 
 ## Rota input
-- .xlsx format
-- People are column names, rows are dates, values are shift names
+- File type: .xlsx 
+- Format: People are column names, rows are dates, values are shift names
 - Dates in ISO8601 format in a date column (the name of which is configurable, default=`date`)
 - People shoud be single string e.g. 'JamesCranley' not 'James Cranley'
 
