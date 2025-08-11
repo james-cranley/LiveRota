@@ -109,7 +109,7 @@ You do need to ensure the calendar client 'refreshes' autoamtically, updates wil
 2. Go to **File → New Calendar Subscription...**
 3. Enter the URL to the `.ics` file, for example:
    ```
-   [http://<hostname>:<port>/<ics_subdir>/JamesCranley.ics](https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics) # NB again, it is CASE SENSITIVE
+   https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics # NB again, it is CASE SENSITIVE
    ```
 4. Click **Subscribe** and adjust settings (refresh interval, name, color, etc.).
 
