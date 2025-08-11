@@ -1,4 +1,4 @@
-# LiveRota
+# `LiveRota`
 
 LiveRota watches a rota Excel file, regenerates `.ics` calendar files when it changes, and serves them over HTTP from a Raspberry Pi (or any Linux host).
 
@@ -9,15 +9,15 @@ LiveRota watches a rota Excel file, regenerates `.ics` calendar files when it ch
 - Outputs `.ics` into a subdirectory inside the served folder (e.g., `/foo`).
 - Fully configurable via `config.yaml`.
 
-## Installation
+## Installation (Conda Environment)
 ```bash
+# Create and activate a Conda environment called LiveRota
+conda create -n LiveRota python=3.11 -y
+conda activate LiveRota
+
 # Clone repository
 git clone https://github.com/<your-username>/LiveRota.git
 cd LiveRota
-
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -52,11 +52,25 @@ ICS files are located under:
 http://<hostname>:<port>/<ics_subdir>/
 ```
 
-## Autostart on Raspberry Pi
-Add to crontab:
+## Autostart on Raspberry Pi (cron)
+To run LiveRota on boot, add to crontab:
 ```bash
 crontab -e
-@reboot /bin/bash -lc 'cd /home/pi/LiveRota && source .venv/bin/activate && python -m src.main -c config.yaml >> live-rota.log 2>&1'
+```
+Then add:
+```bash
+@reboot bash -c 'sleep 30; source ~/miniforge3/etc/profile.d/conda.sh && conda activate LiveRota && cd ~/LiveRota && nohup python -m src.main -c config.yaml > ~/LiveRota/logs/server.log 2>&1 &'
+```
+Explanation:
+- `sleep 30` gives the network time to come up after boot.
+- `source ~/miniforge3/etc/profile.d/conda.sh` initializes Conda in non-interactive shells.
+- `conda activate LiveRota` activates your environment.
+- `nohup ... &` runs the server in the background and detaches it from the terminal.
+- Logs are written to `~/LiveRota/logs/server.log`.
+
+Ensure the logs directory exists:
+```bash
+mkdir -p ~/LiveRota/logs
 ```
 
 ## Requirements
