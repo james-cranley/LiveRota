@@ -16,7 +16,7 @@ conda create -n LiveRota python=3.11 -y
 conda activate LiveRota
 
 # Clone repository
-git clone https://github.com/<your-username>/LiveRota.git
+git clone git@github.com:james-cranley/LiveRota.git
 cd LiveRota
 
 # Install dependencies
