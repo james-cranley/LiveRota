@@ -90,6 +90,14 @@ mkdir -p ~/LiveRota/logs
 ## Serving via the web
 Use cloudflare or similar to forward <port> as a subdomain of an existing domain to make it web-accessible.
 
+This is the sort of format:
+https://liverota.jamescranley.co.uk/<ics_subdir>/<person>.ics
+
+For a concrete example:
+https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics
+
+ URL is **CASE SENSITIVE**
+
 ## How to Subscribe via Calendar client
 
 Once LiveRota is running and serving your `.ics` files, you can subscribe to them in your preferred calendar app.
@@ -101,7 +109,7 @@ You do need to ensure the calendar client 'refreshes' autoamtically, updates wil
 2. Go to **File → New Calendar Subscription...**
 3. Enter the URL to the `.ics` file, for example:
    ```
-   http://<hostname>:<port>/<ics_subdir>/JamesCranley.ics
+   [http://<hostname>:<port>/<ics_subdir>/JamesCranley.ics](https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics) # NB again, it is CASE SENSITIVE
    ```
 4. Click **Subscribe** and adjust settings (refresh interval, name, color, etc.).
 
