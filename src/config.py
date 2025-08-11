@@ -46,6 +46,10 @@ def main():
     cfg_path = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else DEFAULT_CONFIG
     cfg = load_existing(cfg_path)
 
+    # Ensure logs dir exists for server logs
+    logs_dir = Path.home() / "LiveRota" / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+
     print(f"\nLiveRota config wizard → {cfg_path}\n(press Enter to accept defaults)\n")
 
     path_to_rota = _expand_abs(_ask("Path to rota file", cfg.get("path_to_rota", "")))
