@@ -1,0 +1,9 @@
+path_to_rota: /home/jjc/Downloads/Sep2025_rota.xlsx
+serve_root_dir: /home/jjc/LiveRota/public
+ics_subdir: registrar
+people:
+- JamesCranley
+- AnnaGoodhart
+- DilipAbraham
+date_column: date
+port: 8085
