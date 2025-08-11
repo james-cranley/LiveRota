@@ -2,6 +2,12 @@
 
 LiveRota watches a rota Excel file, regenerates `.ics` calendar files when it changes, and serves them over HTTP from a Raspberry Pi (or any Linux host).
 
+## Rota input
+- .xlsx format
+- People are column names, rows are dates, values are shift names
+- Dates in ISO8601 format in a date column (the name of which is configurable, default=`date`)
+- People shoud be single string e.g. 'JamesCranley' not 'James Cranley'
+
 ## Features
 - Watches your rota file for edits using `watchdog`.
 - Runs a custom `make_ics.py` to generate `.ics` files.
@@ -81,5 +87,7 @@ mkdir -p ~/LiveRota/logs
 - `openpyxl`
 - `ics`
 
-## License
-MIT License
+## Serving via the web
+Use cloudflare or similar to forward <port> as a subdomain of an existing domain to make it web-accessible.
+
+## Subscribe via Calendar client
