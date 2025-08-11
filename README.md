@@ -90,4 +90,36 @@ mkdir -p ~/LiveRota/logs
 ## Serving via the web
 Use cloudflare or similar to forward <port> as a subdomain of an existing domain to make it web-accessible.
 
-## Subscribe via Calendar client
+## How to Subscribe via Calendar client
+
+Once LiveRota is running and serving your `.ics` files, you can subscribe to them in your preferred calendar app.
+
+### Apple Calendar (macOS / iOS)
+1. Open Calendar.
+2. Go to **File → New Calendar Subscription...**
+3. Enter the URL to the `.ics` file, for example:
+   ```
+   http://<hostname>:<port>/<ics_subdir>/JamesCranley.ics
+   ```
+4. Click **Subscribe** and adjust settings (refresh interval, name, color, etc.).
+
+### Google Calendar (Web)
+1. Open Google Calendar in your browser.
+2. On the left, click the **+** next to *Other calendars* and select **From URL**.
+3. Paste the `.ics` file URL (as above).
+4. Click **Add calendar**.
+
+> **Note:** Google Calendar refreshes subscribed calendars approximately every 24 hours.
+
+### Outlook (Desktop)
+1. Open Outlook.
+2. Go to **File → Account Settings → Account Settings**.
+3. Select the **Internet Calendars** tab and click **New**.
+4. Paste the `.ics` file URL.
+5. Click **Add**, then configure folder name and description.
+
+### Outlook.com (Web)
+1. Open Outlook.com Calendar in your browser.
+2. Select **Add calendar** → **Subscribe from web**.
+3. Paste the `.ics` file URL.
+4. Give it a name and click **Import**.
