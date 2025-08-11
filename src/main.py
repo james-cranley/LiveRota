@@ -109,10 +109,6 @@ def main():
 
     cfg = read_config(cfg_path)
 
-    # Ensure logs dir exists for server logs
-    logs_dir = Path.home() / "LiveRota" / "logs"
-    logs_dir.mkdir(parents=True, exist_ok=True)
-
     rota = Path(cfg["path_to_rota"])
     serve_root_dir = Path(cfg["serve_root_dir"])
     ics_subdir = cfg["ics_subdir"].strip("/")  # keep filesystem dir clean
