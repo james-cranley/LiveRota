@@ -91,7 +91,7 @@ mkdir -p ~/LiveRota/logs
 Use cloudflare or similar to forward <port> as a subdomain of an existing domain to make it web-accessible.
 
 This is the sort of format:
-https://liverota.jamescranley.co.uk/`ics_subdir`/`person.ics`
+https://SUBDOMAIN.DOMAIN/ICS_SUBDIR/PERSON.ics
 
 For a concrete example:
 https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics
