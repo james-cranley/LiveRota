@@ -32,6 +32,40 @@ def _expand_abs(path: str) -> str:
     return str(Path(os.path.expanduser(path)).resolve())
 
 
+DEFAULT_CONFIG_PATH = DEFAULT_CONFIG
+
+
+def _expand(p: str) -> str:
+    return str(Path(p).expanduser().resolve())
+
+
+def read_config(cfg_path: Path) -> dict:
+    with open(cfg_path, "r", encoding="utf-8") as f:
+        raw = yaml.safe_load(f) or {}
+
+    serve_root_dir = raw.get("serve_root_dir")
+    ics_subdir = raw.get("ics_subdir")
+    legacy_ics_dir = raw.get("ics_dir")
+
+    if not serve_root_dir or not ics_subdir:
+        if legacy_ics_dir:
+            p = Path(_expand(legacy_ics_dir))
+            serve_root_dir = str(p.parent)
+            ics_subdir = p.name
+        else:
+            serve_root_dir = str(Path.home() / "LiveRota" / "public")
+            ics_subdir = "foo"
+
+    return {
+        "path_to_rota": _expand(raw.get("path_to_rota", "")),
+        "serve_root_dir": _expand(serve_root_dir),
+        "ics_subdir": str(ics_subdir),
+        "people": list(raw.get("people", [])),
+        "date_column": raw.get("date_column", "date"),
+        "port": int(raw.get("port", DEFAULT_PORT)),
+    }
+
+
 def load_existing(config_path: Path):
     if config_path.exists():
         try:

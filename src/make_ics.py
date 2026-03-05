@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
+"""
+Generate .ics calendar files from an Excel rota.
+
+Events are created from 09:00 to 17:00 on each date, using the cell's
+text as the event title (e.g., "0800-1430", "OffRota", etc.).
+"""
 import argparse
 import sys
+import uuid
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from ics import Calendar, Event
-
-"""
-Generate .ics calendar files from an Excel rota.
-
-This version does NOT infer shift durations. It always creates events
-from 09:00 to 17:00 on the given date, using the cell's text as the
-event title (e.g., "0800-1430", "OffRota", etc.).
-"""
 
 # === DEFAULT CONFIGURATION (can be overridden via CLI) ===
 DEFAULT_ROTA_FILE_PATH = \
@@ -83,6 +81,27 @@ def _normalize_dates(df: pd.DataFrame, date_column: str) -> pd.DataFrame:
     return df
 
 
+def _serialize_ics(events: list) -> str:
+    FMT = "%Y%m%dT%H%M%S"
+    lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//LiveRota//LiveRota//EN",
+        "CALSCALE:GREGORIAN",
+    ]
+    for dtstart, dtend, title in events:
+        lines += [
+            "BEGIN:VEVENT",
+            f"UID:{uuid.uuid4()}@liverota",
+            f"DTSTART:{dtstart.strftime(FMT)}",
+            f"DTEND:{dtend.strftime(FMT)}",
+            f"SUMMARY:{title}",
+            "END:VEVENT",
+        ]
+    lines.append("END:VCALENDAR")
+    return "\r\n".join(lines) + "\r\n"
+
+
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
 
@@ -132,8 +151,7 @@ def main(argv: list[str]) -> int:
         if developing:
             sub_df = sub_df.head(5)
 
-        cal = Calendar()
-
+        events = []
         for _, row in sub_df.iterrows():
             date = row[date_column]
             if pd.isna(date):
@@ -141,16 +159,12 @@ def main(argv: list[str]) -> int:
             if hasattr(date, "date"):
                 date = date.date()  # pandas Timestamp -> date
             title = row[column]
-
-            # Always 09:00–17:00, title from the cell
-            event = Event()
-            event.name = title
-            event.begin = datetime.combine(date, datetime.strptime("09:00", "%H:%M").time())
-            event.end = datetime.combine(date, datetime.strptime("17:00", "%H:%M").time())
-            cal.events.add(event)
+            dtstart = datetime.combine(date, datetime.strptime("09:00", "%H:%M").time())
+            dtend = datetime.combine(date, datetime.strptime("17:00", "%H:%M").time())
+            events.append((dtstart, dtend, title))
 
         ics_filename = output_dir / f"{column}.ics"
-        ics_filename.write_text(cal.serialize())
+        ics_filename.write_text(_serialize_ics(events))
         print(f"✅ {ics_filename} written.")
 
     return 0

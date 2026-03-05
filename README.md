@@ -1,23 +1,22 @@
 # `LiveRota`
 
-LiveRota watches a rota Excel file, regenerates `.ics` calendar files when it changes, and serves them over HTTP from a Raspberry Pi (or any Linux host).
+LiveRota converts a rota Excel file into `.ics` calendar files. It can generate them once as static files, or run as a persistent service that watches the rota for changes and serves the files over HTTP.
 
 ## Rota input
-- File type: .xlsx 
+- File type: `.xlsx`
 - Format: People are column names, rows are dates, values are shift names
 - Dates in ISO8601 format in a date column (the name of which is configurable, default=`date`)
-- People shoud be single string e.g. 'JamesCranley' not 'James Cranley'
+- People should be a single string e.g. `JamesCranley` not `James Cranley`
 
 ## Features
-- Watches your rota file for edits using `watchdog`.
-- Runs a custom `make_ics.py` to generate `.ics` files.
+- Generate static `.ics` files from a rota with a single command — no config needed.
+- Watches your rota file for edits using `watchdog` and rebuilds automatically.
 - Serves files over HTTP via Python's built-in HTTP server.
-- Outputs `.ics` into a subdirectory inside the served folder (e.g., `/foo`).
 - Fully configurable via `config.yaml`.
 
 ## Installation (Conda Environment)
 ```bash
-# Create and activate a Conda environment called LiveRota
+# Create and activate a Conda environment
 conda create -n LiveRota python=3.11 -y
 conda activate LiveRota
 
@@ -29,8 +28,42 @@ cd LiveRota
 pip install -r requirements.txt
 ```
 
+## Usage
+
+There are three modes:
+
+### 1. Generate static `.ics` files (no config needed)
+```bash
+python -m src.generate --rota rota.xlsx --people JamesCranley --output-dir ./out
+```
+Writes `./out/JamesCranley.ics` and exits. Multiple people can be listed:
+```bash
+python -m src.generate --rota rota.xlsx --people JamesCranley JaneSmith --output-dir ./out
+```
+
+### 2. Generate from `config.yaml`
+```bash
+python -m src.generate -c config.yaml
+```
+Generates `.ics` files using settings from config, then exits.
+
+### 3. Full watch + serve mode
+```bash
+python -m src.main -c config.yaml
+```
+Watches the rota file for changes, rebuilds `.ics` files automatically, and serves them over HTTP.
+
+The server will be available at:
+```
+http://<hostname>:<port>/
+```
+ICS files are located under:
+```
+http://<hostname>:<port>/<ics_subdir>/
+```
+
 ## Configuration
-Run the interactive wizard:
+For modes 2 and 3, run the interactive wizard to create `config.yaml`:
 ```bash
 python -m src.config
 ```
@@ -41,22 +74,6 @@ You will be prompted for:
 - List of people (comma-separated)
 - Date column name in the Excel sheet
 - Port to serve HTTP
-
-This creates/updates `config.yaml`.
-
-## Running LiveRota
-```bash
-python -m src.main -c config.yaml
-```
-
-The server will be available at:
-```
-http://<hostname>:<port>/
-```
-ICS files are located under:
-```
-http://<hostname>:<port>/<ics_subdir>/
-```
 
 ## Autostart on Raspberry Pi (cron)
 To run LiveRota on boot, add to crontab:
@@ -85,32 +102,35 @@ mkdir -p ~/LiveRota/logs
 - `PyYAML`
 - `pandas`
 - `openpyxl`
-- `ics`
 
 ## Serving via the web
-Use cloudflare or similar to forward <port> as a subdomain of an existing domain to make it web-accessible.
+Use Cloudflare or similar to forward `<port>` as a subdomain of an existing domain to make it web-accessible.
 
-This is the sort of format:
+URL format:
+```
 https://SUBDOMAIN.DOMAIN/ICS_SUBDIR/PERSON.ics
+```
 
-For a concrete example:
+For example:
+```
 https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics
+```
 
- URL is **CASE SENSITIVE**
+URL is **CASE SENSITIVE**.
 
 ## How to Subscribe via Calendar client
 
 Once LiveRota is running and serving your `.ics` files, you can subscribe to them in your preferred calendar app.
-This means that changes in the rota will be reflected in the subscribed calendar feed.
-You do need to ensure the calendar client 'refreshes' autoamtically, updates will not be 'pushed' to the client. Daily is fine since the rota shouldn't change often.
+Changes to the rota will be reflected in the subscribed calendar feed. You do need to ensure the calendar client refreshes automatically — updates will not be pushed to the client. Daily is fine since the rota shouldn't change often.
 
 ### Apple Calendar (macOS / iOS)
 1. Open Calendar.
 2. Go to **File → New Calendar Subscription...**
 3. Enter the URL to the `.ics` file, for example:
    ```
-   https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics # NB again, it is CASE SENSITIVE
+   https://liverota.jamescranley.co.uk/registrars/JamesCranley.ics
    ```
+   Note: URL is CASE SENSITIVE.
 4. Click **Subscribe** and adjust settings (refresh interval, name, color, etc.).
 
 ### Google Calendar (Web)
