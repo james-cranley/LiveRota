@@ -2,4 +2,3 @@ watchdog
 PyYAML
 pandas
 openpyxl
-ics
