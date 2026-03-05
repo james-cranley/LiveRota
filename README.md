@@ -1,3 +1,11 @@
+```
+ _     _          ____       _
+| |   (_)_   ___ |  _ \ ___ | |_ __ _
+| |   | \ \ / / _| |_) / _ \| __/ _` |
+| |___| |\ V / (_|  _ < (_) | || (_| |
+|_____|_| \_/ \__|_| \_\___/ \__\__,_|
+```
+
 # `LiveRota`
 
 LiveRota converts a rota Excel file into `.ics` calendar files. It can generate them once as static files, or run as a persistent service that watches the rota for changes and serves the files over HTTP.
