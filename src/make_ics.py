@@ -145,6 +145,7 @@ def main(argv: list[str]) -> int:
         # Keep rows where date is valid and the cell has some text (any text is a valid "title")
         sub_df = df[[date_column, column]].copy()
         sub_df = sub_df.dropna(subset=[date_column])                      # date must exist
+        sub_df = sub_df.dropna(subset=[column])                           # skip blank cells
         sub_df[column] = sub_df[column].astype(str).str.strip()           # normalize to string
         sub_df = sub_df[sub_df[column] != ""]                             # require non-empty text
 
